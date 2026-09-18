@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Conversor de Temperatura</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 22rem; margin: 3rem auto; padding: 0 1rem; }
+    label, button { display: block; margin-top: 1rem; }
+    input, button { font-size: 1rem; padding: .5rem; width: 100%; box-sizing: border-box; }
+    #resultado { margin-top: 1.5rem; font-size: 1.5rem; font-weight: bold; min-height: 2rem; }
+    #resultado.erro { color: #b00020; font-size: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>Celsius ⇄ Fahrenheit</h1>
+  <form id="form">
+    <label>Valor <input name="valor" type="text" inputmode="decimal" autocomplete="off" required></label>
+    <label>Converter
+      <select name="sentido">
+        <option value="cf">Celsius → Fahrenheit</option>
+        <option value="fc">Fahrenheit → Celsius</option>
+      </select>
+    </label>
+    <button type="submit">Converter</button>
+  </form>
+  <p id="resultado" role="status" aria-live="polite"></p>
+  <script type="module" src="main.js"></script>
+</body>
+</html>

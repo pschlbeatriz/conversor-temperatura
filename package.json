@@ -1,0 +1,38 @@
+{
+  "name": "conversor-temperatura",
+  "version": "1.0.0",
+  "description": "Conversor Celsius/Fahrenheit: mini projeto de DevOps (CI, linter, cobertura, revisão de testes por IA, Terraform)",
+  "type": "module",
+  "private": true,
+  "author": "Beatriz Paschoal Floriano",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "npx --yes serve web",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+    "lint": "eslint .",
+    "ai-review": "node scripts/ai-review.js"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@jest/globals": "^30.5.2",
+    "eslint": "^10.11.0",
+    "globals": "^17.12.0",
+    "jest": "^30.5.2"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "web/converter.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "lines": 90,
+        "branches": 90,
+        "functions": 90
+      }
+    }
+  }
+}
