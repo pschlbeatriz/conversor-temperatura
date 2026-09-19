@@ -32,7 +32,7 @@ Roda em todo PR para `main` e em push na `main`, com 3 jobs:
 1. **qualidade:** `npm ci`, lint, testes e cobertura (o relatório fica no artefato `cobertura`).
 2. **terraform:** `terraform fmt -check`, `init -backend=false` e `validate`.
 3. **revisao-ia** (só em PR, depois de `qualidade`): a IA revisa os testes e sugere outros; o resultado aparece no resumo do job e no artefato `ai-review`.
-   Requer o secret `ANTHROPIC_API_KEY` (Settings > Secrets and variables > Actions). Sem ele, o job passa avisando que foi ignorado, o que também vale para PRs de fork.
+   Requer o secret `GEMINI_API_KEY` (Settings > Secrets and variables > Actions). Sem ele, o job passa avisando que foi ignorado, o que também vale para PRs de fork.
 
 Para bloquear o merge quando a CI falhar: Settings > Branches > regra para `main` > *Require status checks to pass* e marcar `qualidade` e `terraform`.
 

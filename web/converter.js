@@ -1,4 +1,3 @@
-// Lógica pura de conversão: sem DOM, para poder ser testada com Jest.
 const ZERO_ABSOLUTO_C = -273.15;
 const ZERO_ABSOLUTO_F = -459.67;
 

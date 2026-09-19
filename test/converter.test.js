@@ -1,7 +1,6 @@
 import { describe, test, expect } from '@jest/globals';
 import { celsiusParaFahrenheit, fahrenheitParaCelsius } from '../web/converter.js';
 
-// Float não é exato (ex.: 0.1 + 0.2), então comparamos com tolerância.
 const quase = (atual, esperado) => expect(atual).toBeCloseTo(esperado, 9);
 
 describe('acertos: Celsius -> Fahrenheit', () => {

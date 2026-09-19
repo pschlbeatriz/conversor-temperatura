@@ -1,5 +1,4 @@
-# Introdução a IaC sem nuvem: "publica" a tela copiando os arquivos de ../web
-# para uma pasta local. O Terraform cria, atualiza e remove os arquivos sozinho.
+# "Publica" a tela copiando os arquivos de ../web para uma pasta local.
 terraform {
   required_version = ">= 1.5"
   required_providers {

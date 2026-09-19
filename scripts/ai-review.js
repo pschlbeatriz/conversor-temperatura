@@ -1,10 +1,9 @@
-// Envia o código e os testes para o Claude revisar e sugerir testes diferentes.
-// Uso: ANTHROPIC_API_KEY=... npm run ai-review   (sem a chave, o script só avisa e sai com 0)
+// Uso: GEMINI_API_KEY=... npm run ai-review   (sem a chave, o script só avisa e sai com 0)
 import { readFile, writeFile, appendFile } from 'node:fs/promises';
 
-const chave = process.env.ANTHROPIC_API_KEY;
+const chave = process.env.GEMINI_API_KEY;
 if (!chave) {
-  console.log('ANTHROPIC_API_KEY ausente (ex.: PR de fork): revisão por IA ignorada.');
+  console.log('GEMINI_API_KEY ausente (ex.: PR de fork): revisão por IA ignorada.');
   process.exit(0);
 }
 
@@ -30,14 +29,10 @@ ${codigo}
 ${testes}
 \`\`\``;
 
-const resp = await fetch('https://api.anthropic.com/v1/messages', {
+const resp = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent', {
   method: 'POST',
-  headers: { 'x-api-key': chave, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-  body: JSON.stringify({
-    model: 'claude-sonnet-5',
-    max_tokens: 2000,
-    messages: [{ role: 'user', content: prompt }],
-  }),
+  headers: { 'x-goog-api-key': chave, 'content-type': 'application/json' },
+  body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }] }),
 });
 
 if (!resp.ok) {
@@ -45,11 +40,10 @@ if (!resp.ok) {
   process.exit(1);
 }
 
-const revisao = (await resp.json()).content.map((b) => b.text ?? '').join('');
+const revisao = (await resp.json()).candidates[0].content.parts.map((p) => p.text ?? '').join('');
 await writeFile('ai-review.md', revisao);
 console.log(revisao);
 
-// No GitHub Actions, mostra a revisão na aba de resumo do job.
 if (process.env.GITHUB_STEP_SUMMARY) {
   await appendFile(process.env.GITHUB_STEP_SUMMARY, `## Revisão dos testes por IA\n\n${revisao}\n`);
 }

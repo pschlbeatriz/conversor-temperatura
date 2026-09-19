@@ -1,7 +1,7 @@
 # Revisão dos testes por IA
 
 Revisão feita pelo Claude (Claude Code, modelo Sonnet 5) sobre `web/converter.js` e `test/converter.test.js`.
-Na pipeline, o mesmo trabalho é feito automaticamente em todo PR por `scripts/ai-review.js` (job `revisao-ia`), que envia código e testes à API do Claude e publica o resultado no resumo do job.
+Na pipeline, o mesmo trabalho é feito automaticamente em todo PR por `scripts/ai-review.js` (job `revisao-ia`), que envia código e testes à API do Gemini e publica o resultado no resumo do job.
 
 ## Avaliação da suíte original (20 testes, 100% de cobertura)
 
