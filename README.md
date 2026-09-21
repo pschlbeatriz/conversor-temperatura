@@ -25,6 +25,22 @@ npm start             # abre a tela em http://localhost:3000
 
 Precisa de Node 20 ou superior.
 
+## Diário de Comandos
+
+Comandos exatos usados para instalar, validar e rodar o projeto localmente.
+
+| Etapa | Comando | O que faz |
+|-------|---------|-----------|
+| Instalação | `npm ci` | Instala as dependências travadas no `package-lock.json` |
+| Linter | `npm run lint` | Roda o ESLint (`eslint .`) e aponta erros/formatação |
+| Testes | `npm test` | Roda a suíte Jest (`test/converter.test.js`) |
+| Cobertura | `npm run coverage` | Testes + relatório de cobertura, falha se < 90% |
+| Build | *(não se aplica)* | Projeto é HTML/JS estático servido direto (`web/`), sem etapa de build. `npm start` só serve os arquivos com `npx serve web` |
+
+**Critério de entrega:** com Node 20+ instalado, rodando `npm ci` seguido de `npm run lint`, `npm test` e `npm run coverage` em qualquer máquina, o projeto valida sem erros e a cobertura fecha acima de 90%.
+
+Repositório: https://github.com/pschlbeatriz/conversor-temperatura
+
 ## Pipeline (`ci.yml`)
 
 Roda em todo PR para `main` e em push na `main`, com 3 jobs:
