@@ -5,11 +5,24 @@
 - `quality-gate-ia`: job novo no `ci.yml`, roda em todo push/PR junto com o resto da CI. Pega a cobertura real do Jest e manda pra IA (Groq, `openai/gpt-oss-20b`) decidir se aprova ou bloqueia.
 - `log-analysis.yml`, `metrics-analysis.yml`, `trace-analysis.yml`: workflows separados, disparados manualmente (aba Actions → escolher o workflow → Run workflow), que analisam `logs/app.log`, `metrics/system.json` e `traces/conversion_trace.txt` e abrem uma issue automática quando a IA acha algo crítico.
 
+## Resultados
+
+Já rodei tudo pelo menos uma vez pra garantir que funcionava antes de entregar. Resumo de cada run (link de cada um abaixo, só falta printar):
+
+| Pipeline | Resultado | Run |
+|---|---|---|
+| Quality Gate (aprovado, cobertura 100%) | `APROVADO: Cobertura de testes acima do limite mínimo.` | [run 35671649014](https://github.com/pschlbeatriz/conversor-temperatura/actions/runs/35671649014/job/106569299102) |
+| Quality Gate (bloqueado, cobertura 76,92%) | `BLOQUEADO: cobertura abaixo de 90%.` | [run 35672609840](https://github.com/pschlbeatriz/conversor-temperatura/actions/runs/35672609840/job/106572265918) |
+| Análise de logs | achou o `CRITICAL`, abriu a [issue #4](https://github.com/pschlbeatriz/conversor-temperatura/issues/4) | [run 35675799084](https://github.com/pschlbeatriz/conversor-temperatura/actions/runs/35675799084) |
+| Análise de métricas | achou risco operacional (latência 3200ms, erro 22%), abriu a [issue #3](https://github.com/pschlbeatriz/conversor-temperatura/issues/3) | [run 35675800685](https://github.com/pschlbeatriz/conversor-temperatura/actions/runs/35675800685) |
+| Análise de traces | achou o gargalo na renderização (4800ms), abriu a [issue #2](https://github.com/pschlbeatriz/conversor-temperatura/issues/2) | [run 35675663588](https://github.com/pschlbeatriz/conversor-temperatura/actions/runs/35675663588) |
+
+Bug que apareci no caminho, também vale registrar: `log-analysis` e `metrics-analysis` falharam na primeira tentativa com `invalid character '\n' in string literal` — exatamente o aviso que tem no material da aula sobre montar o JSON concatenando string manualmente quando o conteúdo tem quebra de linha. Troquei pra montar o corpo da requisição com `jq` em vez de concatenar string na mão, e passou a funcionar.
+
 ## Como gerar os prints pro PDF
 
-1. Aba **Actions** do repositório, esperar o job `Quality Gate com IA` rodar no último push (aprovado, cobertura tá em 100%). Print do log do step "AI Quality Gate" e do resumo (Summary) do job.
-2. Pra mostrar o **bloqueio**: derrubar a cobertura de propósito (comentar um teste em `test/converter.test.js`, por exemplo), dar commit e push, esperar rodar, printar o `BLOQUEADO` da IA e o job vermelho. Depois reverter o commit.
-3. Rodar `log-analysis`, `metrics-analysis` e `trace-analysis` manualmente (Actions → workflow → Run workflow). Printar o log de cada um mostrando a decisão da IA, e a aba **Issues** do repositório mostrando as issues criadas automaticamente.
+1. Abrir cada link da tabela acima, expandir o step da IA (`AI Quality Gate` / `IA analisa logs` / `IA analisa métricas` / `IA analisa traces`) e printar.
+2. Aba **Issues** do repositório: printar a lista com as 3 issues abertas automaticamente, e cada uma individualmente.
 
 ## Respostas — item 3.6
 
