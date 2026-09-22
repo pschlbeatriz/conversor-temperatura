@@ -1,0 +1,5 @@
+Recebe input do usuario -> Valida entrada -> Calcula conversao Celsius/Fahrenheit -> Renderiza resultado no DOM
+Tempo validacao: 5ms
+Tempo calculo: 2ms
+Tempo renderizacao: 4800ms
+Timeout ao atualizar o DOM

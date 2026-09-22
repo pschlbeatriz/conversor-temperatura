@@ -30,6 +30,56 @@ jobs:
           name: cobertura
           path: coverage/
 
+  quality-gate-ia:
+    name: Quality Gate com IA
+    needs: qualidade
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 'lts/*'
+          cache: npm
+      - run: npm ci
+      - name: Rodar cobertura
+        run: npm run coverage | tee coverage_output.txt
+      - name: Extrair percentual de cobertura
+        id: coverage
+        run: |
+          PCT=$(grep "All files" coverage_output.txt | awk -F'|' '{print $2}' | tr -d ' ')
+          echo "Cobertura extraída: $PCT%"
+          echo "pct=$PCT" >> "$GITHUB_OUTPUT"
+      - name: AI Quality Gate
+        env:
+          GROQCLOUD_API_KEY: ${{ secrets.GROQCLOUD_API_KEY }}
+          COVERAGE: ${{ steps.coverage.outputs.pct }}
+        run: |
+          RESPONSE=$(curl -s https://api.groq.com/openai/v1/chat/completions \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $GROQCLOUD_API_KEY" \
+            -d '{
+              "model": "llama-3.1-8b-instant",
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "Você é um quality gate de pipeline CI/CD. O mínimo de cobertura de testes aceitável para este projeto é 90%. Aprove se a cobertura for maior ou igual a 90%. Bloqueie se for menor. Responda começando com a palavra APROVADO ou BLOQUEADO, seguida de uma justificativa curta."
+                },
+                {
+                  "role": "user",
+                  "content": "Cobertura de testes do projeto: '"$COVERAGE"'%. O código pode avançar no pipeline?"
+                }
+              ]
+            }')
+          echo "$RESPONSE"
+          DECISION=$(echo "$RESPONSE" | python3 -c "import sys,json; \
+          r=json.load(sys.stdin); print(r['choices'][0]['message']['content'])")
+          echo "$DECISION"
+          echo "### Quality Gate com IA" >> "$GITHUB_STEP_SUMMARY"
+          echo "$DECISION" >> "$GITHUB_STEP_SUMMARY"
+          if echo "$DECISION" | grep -qi "BLOQUEADO"; then
+            exit 1
+          fi
+
   terraform:
     name: Terraform fmt + validate
     runs-on: ubuntu-latest

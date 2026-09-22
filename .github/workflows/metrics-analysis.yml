@@ -1,0 +1,54 @@
+name: IA analisando métricas
+
+on:
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  analisar-metricas:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositório
+        uses: actions/checkout@v7
+
+      - name: Login GitHub CLI
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+
+      - name: IA analisa métricas
+        env:
+          GROQCLOUD_API_KEY: ${{ secrets.GROQCLOUD_API_KEY }}
+        run: |
+          echo "Lendo métricas..."
+          METRICS=$(cat metrics/system.json)
+          RESPONSE=$(curl -s https://api.groq.com/openai/v1/chat/completions \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer $GROQCLOUD_API_KEY" \
+            -d '{
+              "model": "llama-3.1-8b-instant",
+              "messages": [
+                {
+                  "role": "system",
+                  "content": "Você é especialista em observabilidade e análise de métricas."
+                },
+                {
+                  "role": "user",
+                  "content": "Analise estas métricas de uma aplicação web de conversão de temperatura e diga se existe risco operacional: '"$METRICS"'"
+                }
+              ]
+            }')
+          echo "$RESPONSE"
+          DECISION=$(echo "$RESPONSE" | python3 -c "import sys,json; \
+          r=json.load(sys.stdin); print(r['choices'][0]['message']['content'])")
+          echo "$DECISION"
+          echo "### Análise de métricas" >> "$GITHUB_STEP_SUMMARY"
+          echo "$DECISION" >> "$GITHUB_STEP_SUMMARY"
+          if echo "$DECISION" | grep -qiE "crítico|critico|risco|grave|instável|instavel"; then
+            ISSUE_URL=$(gh issue create \
+              --title "Risco detectado nas métricas" \
+              --body "$DECISION")
+            echo "$ISSUE_URL"
+            exit 1
+          fi
