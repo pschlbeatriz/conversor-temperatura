@@ -10,11 +10,12 @@ describe('acertos: Celsius -> Fahrenheit', () => {
   test('valor negativo (-40 é igual nas duas escalas)', () => quase(celsiusParaFahrenheit(-40), -40));
 });
 
-describe('acertos: Fahrenheit -> Celsius', () => {
-  test('ponto de congelamento da água', () => quase(fahrenheitParaCelsius(32), 0));
-  test('ponto de ebulição da água', () => quase(fahrenheitParaCelsius(212), 100));
-  test('valor negativo (-40 é igual nas duas escalas)', () => quase(fahrenheitParaCelsius(-40), -40));
-});
+// comentado junto com o resto pra derrubar mais a cobertura nesse ensaio
+// describe('acertos: Fahrenheit -> Celsius', () => {
+//   test('ponto de congelamento da água', () => quase(fahrenheitParaCelsius(32), 0));
+//   test('ponto de ebulição da água', () => quase(fahrenheitParaCelsius(212), 100));
+//   test('valor negativo (-40 é igual nas duas escalas)', () => quase(fahrenheitParaCelsius(-40), -40));
+// });
 
 // comentado de propósito pra ensaiar o quality gate com IA bloqueando (Aula 3, item 3.6.2)
 // describe('erros: entradas inválidas', () => {
@@ -38,6 +39,5 @@ describe('acertos: Fahrenheit -> Celsius', () => {
 describe('limites', () => {
   test('zero absoluto exato é aceito', () => {
     quase(celsiusParaFahrenheit(-273.15), -459.67);
-    quase(fahrenheitParaCelsius(-459.67), -273.15);
   });
 });
