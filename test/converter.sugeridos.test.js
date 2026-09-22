@@ -8,19 +8,18 @@ describe('ida e volta (propriedade)', () => {
   });
 });
 
-// comentado junto no mesmo ensaio do quality gate com IA (Aula 3, item 3.6.2)
-// describe('tipos inválidos que não eram testados', () => {
-//   test.each([['boolean', true], ['array', []], ['objeto', {}], ['bigint', 10n]])('rejeita %s', (_nome, valor) => {
-//     expect(() => celsiusParaFahrenheit(valor)).toThrow(TypeError);
-//     expect(() => fahrenheitParaCelsius(valor)).toThrow(TypeError);
-//   });
-// });
+describe('tipos inválidos que não eram testados', () => {
+  test.each([['boolean', true], ['array', []], ['objeto', {}], ['bigint', 10n]])('rejeita %s', (_nome, valor) => {
+    expect(() => celsiusParaFahrenheit(valor)).toThrow(TypeError);
+    expect(() => fahrenheitParaCelsius(valor)).toThrow(TypeError);
+  });
+});
 
-// describe('overflow: entrada finita não pode virar Infinity', () => {
-//   test('Celsius -> Fahrenheit', () => {
-//     expect(() => celsiusParaFahrenheit(Number.MAX_VALUE)).toThrow(RangeError);
-//   });
-//   test('Fahrenheit -> Celsius', () => {
-//     expect(() => fahrenheitParaCelsius(Number.MAX_VALUE)).toThrow(RangeError);
-//   });
-// });
+describe('overflow: entrada finita não pode virar Infinity', () => {
+  test('Celsius -> Fahrenheit', () => {
+    expect(() => celsiusParaFahrenheit(Number.MAX_VALUE)).toThrow(RangeError);
+  });
+  test('Fahrenheit -> Celsius', () => {
+    expect(() => fahrenheitParaCelsius(Number.MAX_VALUE)).toThrow(RangeError);
+  });
+});
