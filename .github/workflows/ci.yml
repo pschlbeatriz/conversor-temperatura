@@ -33,7 +33,6 @@ jobs:
   quality-gate-ia:
     name: Quality Gate com IA
     needs: qualidade
-    if: always()
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -43,7 +42,7 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Rodar cobertura
-        run: npm run coverage | tee coverage_output.txt || true
+        run: npm run coverage | tee coverage_output.txt
       - name: Extrair percentual de cobertura
         id: coverage
         run: |
