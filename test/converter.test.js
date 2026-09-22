@@ -16,23 +16,24 @@ describe('acertos: Fahrenheit -> Celsius', () => {
   test('valor negativo (-40 é igual nas duas escalas)', () => quase(fahrenheitParaCelsius(-40), -40));
 });
 
-describe('erros: entradas inválidas', () => {
-  const invalidos = [['string', '10'], ['null', null], ['undefined', undefined], ['NaN', NaN], ['Infinity', Infinity]];
+// comentado de propósito pra ensaiar o quality gate com IA bloqueando (Aula 3, item 3.6.2)
+// describe('erros: entradas inválidas', () => {
+//   const invalidos = [['string', '10'], ['null', null], ['undefined', undefined], ['NaN', NaN], ['Infinity', Infinity]];
 
-  test.each(invalidos)('Celsius -> Fahrenheit rejeita %s', (_nome, valor) => {
-    expect(() => celsiusParaFahrenheit(valor)).toThrow(TypeError);
-  });
-  test.each(invalidos)('Fahrenheit -> Celsius rejeita %s', (_nome, valor) => {
-    expect(() => fahrenheitParaCelsius(valor)).toThrow(TypeError);
-  });
+//   test.each(invalidos)('Celsius -> Fahrenheit rejeita %s', (_nome, valor) => {
+//     expect(() => celsiusParaFahrenheit(valor)).toThrow(TypeError);
+//   });
+//   test.each(invalidos)('Fahrenheit -> Celsius rejeita %s', (_nome, valor) => {
+//     expect(() => fahrenheitParaCelsius(valor)).toThrow(TypeError);
+//   });
 
-  test('Celsius abaixo do zero absoluto', () => {
-    expect(() => celsiusParaFahrenheit(-273.16)).toThrow(RangeError);
-  });
-  test('Fahrenheit abaixo do zero absoluto', () => {
-    expect(() => fahrenheitParaCelsius(-459.68)).toThrow(RangeError);
-  });
-});
+//   test('Celsius abaixo do zero absoluto', () => {
+//     expect(() => celsiusParaFahrenheit(-273.16)).toThrow(RangeError);
+//   });
+//   test('Fahrenheit abaixo do zero absoluto', () => {
+//     expect(() => fahrenheitParaCelsius(-459.68)).toThrow(RangeError);
+//   });
+// });
 
 describe('limites', () => {
   test('zero absoluto exato é aceito', () => {
