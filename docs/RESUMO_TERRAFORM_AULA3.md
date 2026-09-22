@@ -1,6 +1,6 @@
 # Resumo - atividade de Terraform (Aula 3)
 
-Arquivo: `terraform/aws-deploy.tf`.
+Arquivo: `terraform-aws/aws-deploy.tf` (pasta separada do `terraform/` do mini projeto porque os dois têm um bloco `required_providers` diferente, um usa provider local e o outro AWS, e não dá pra ter dois num mesmo diretório).
 
 A ideia do exercício é a mesma que a professora mostrou em aula, só que adaptada pro meu projeto: em vez de subir um servidor único, o Terraform descreve um grupo de servidores atrás de um load balancer, com auto scaling group garantindo que sempre tenha pelo menos 2 instâncias no ar. Se uma cair, o health check do load balancer percebe e o ASG sobe outra sozinho.
 

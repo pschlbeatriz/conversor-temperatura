@@ -43,6 +43,19 @@ jobs:
       - run: terraform init -backend=false
       - run: terraform validate
 
+  terraform-aws:
+    name: Terraform AWS (aula 3) fmt + validate
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform-aws
+    steps:
+      - uses: actions/checkout@v7
+      - uses: hashicorp/setup-terraform@v4
+      - run: terraform fmt -check
+      - run: terraform init -backend=false
+      - run: terraform validate
+
   revisao-ia:
     name: Revisão dos testes por IA
     if: github.event_name == 'pull_request'
