@@ -27,22 +27,17 @@ jobs:
         env:
           GROQCLOUD_API_KEY: ${{ secrets.GROQCLOUD_API_KEY }}
         run: |
+          PAYLOAD=$(jq -n --arg log "$LOG_CONTENT" '{
+            model: "openai/gpt-oss-20b",
+            messages: [
+              { role: "system", content: "Você é um especialista em observabilidade e análise de logs." },
+              { role: "user", content: ("Analise estes logs do conversor de temperatura e diga se existe erro crítico:\n\n" + $log) }
+            ]
+          }')
           RESPONSE=$(curl -s https://api.groq.com/openai/v1/chat/completions \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $GROQCLOUD_API_KEY" \
-            -d '{
-              "model": "openai/gpt-oss-20b",
-              "messages": [
-                {
-                  "role": "system",
-                  "content": "Você é um especialista em observabilidade e análise de logs."
-                },
-                {
-                  "role": "user",
-                  "content": "Analise estes logs do conversor de temperatura e diga se existe erro crítico:\n\n'"$LOG_CONTENT"'"
-                }
-              ]
-            }')
+            -d "$PAYLOAD")
           echo "$RESPONSE"
           DECISION=$(echo "$RESPONSE" | python3 -c "import sys,json; \
           r=json.load(sys.stdin); print(r['choices'][0]['message']['content'])")

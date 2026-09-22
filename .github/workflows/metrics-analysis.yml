@@ -23,22 +23,17 @@ jobs:
         run: |
           echo "Lendo métricas..."
           METRICS=$(cat metrics/system.json)
+          PAYLOAD=$(jq -n --arg metrics "$METRICS" '{
+            model: "openai/gpt-oss-20b",
+            messages: [
+              { role: "system", content: "Você é especialista em observabilidade e análise de métricas." },
+              { role: "user", content: ("Analise estas métricas de uma aplicação web de conversão de temperatura e diga se existe risco operacional: " + $metrics) }
+            ]
+          }')
           RESPONSE=$(curl -s https://api.groq.com/openai/v1/chat/completions \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $GROQCLOUD_API_KEY" \
-            -d '{
-              "model": "openai/gpt-oss-20b",
-              "messages": [
-                {
-                  "role": "system",
-                  "content": "Você é especialista em observabilidade e análise de métricas."
-                },
-                {
-                  "role": "user",
-                  "content": "Analise estas métricas de uma aplicação web de conversão de temperatura e diga se existe risco operacional: '"$METRICS"'"
-                }
-              ]
-            }')
+            -d "$PAYLOAD")
           echo "$RESPONSE"
           DECISION=$(echo "$RESPONSE" | python3 -c "import sys,json; \
           r=json.load(sys.stdin); print(r['choices'][0]['message']['content'])")
