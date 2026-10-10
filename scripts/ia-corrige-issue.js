@@ -14,7 +14,12 @@ test/converter.test.js atual (use como modelo de estilo):
 ${readFileSync('test/converter.test.js', 'utf8')}
 
 Resolva a issue alterando web/converter.js (ESM, mesmo estilo, sem comentários novos) e crie um arquivo de testes Jest em test/ cobrindo acertos e erros do que foi adicionado (cobertura mínima de 90%).
-Responda SOMENTE um JSON: {"resumo": "o que mudou, em 2 frases", "arquivos": {"caminho": "conteúdo completo do arquivo"}}`;
+Responda SOMENTE neste formato, sem cercas de código:
+=== RESUMO ===
+o que mudou, em 2 frases
+=== ARQUIVO: caminho/do/arquivo ===
+conteúdo completo do arquivo
+(repita o bloco ARQUIVO para cada arquivo)`;
 
 const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
   method: 'POST',
@@ -32,8 +37,11 @@ const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
 if (!resp.ok) throw new Error(`Groq ${resp.status}: ${await resp.text()}`);
 
 const texto = (await resp.json()).choices[0].message.content;
-const { resumo, arquivos } = JSON.parse(texto.slice(texto.indexOf('{'), texto.lastIndexOf('}') + 1));
-for (const [caminho, conteudo] of Object.entries(arquivos)) {
+const [cabecalho, ...blocos] = texto.split(/^=== ARQUIVO: (.+) ===$/m);
+const resumo = cabecalho.replace('=== RESUMO ===', '').trim();
+for (let i = 0; i < blocos.length; i += 2) {
+  const caminho = blocos[i].trim();
+  const conteudo = `${blocos[i + 1].trim()}\n`;
   if (!ARQUIVOS_PERMITIDOS.test(caminho)) throw new Error(`IA tentou alterar arquivo fora da lista: ${caminho}`);
   writeFileSync(caminho, conteudo);
   console.log(`alterado: ${caminho}`);
