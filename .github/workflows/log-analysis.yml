@@ -13,6 +13,18 @@ jobs:
       - name: Clonar repositório
         uses: actions/checkout@v7
 
+      # Camada 1: regra fixa. Nenhum texto no log consegue convencê-la.
+      - name: Regra fixa (não depende da IA)
+        id: regra
+        run: |
+          if grep -qE '^(CRITICAL|FATAL)' logs/app.log; then
+            echo "critico=true" >> "$GITHUB_OUTPUT"
+            echo "::warning::Regra fixa: há linha CRITICAL ou FATAL no log"
+          else
+            echo "critico=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Camada 2: a IA analisa o contexto e explica
       - name: IA analisa logs (ia_decisao.sh)
         id: ia
         env:
@@ -25,11 +37,17 @@ jobs:
           OPCAO_SEGURA: CRITICO
         run: bash scripts/ia_decisao.sh
 
-      - name: Falhar se a IA apontar problema crítico
+      - name: Decisão final
         env:
+          REGRA: ${{ steps.regra.outputs.critico }}
           DECISAO: ${{ steps.ia.outputs.decisao }}
         run: |
-          if [ "$DECISAO" != "NORMAL" ]; then
-            echo "::error::Logs com problema crítico (decisão: $DECISAO)"
+          {
+            echo "### Decisão final"
+            echo "- Regra fixa encontrou CRITICAL/FATAL: **$REGRA**"
+            echo "- Decisão da IA: **$DECISAO**"
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$REGRA" = "true" ] || [ "$DECISAO" != "NORMAL" ]; then
+            echo "::error::Logs com problema crítico (regra fixa: $REGRA, IA: $DECISAO)"
             exit 1
           fi
