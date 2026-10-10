@@ -21,7 +21,8 @@ const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
   headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${GROQCLOUD_API_KEY}` },
   body: JSON.stringify({
     model: 'openai/gpt-oss-20b',
-    response_format: { type: 'json_object' },
+    reasoning_effort: 'low',
+    max_completion_tokens: 8000,
     messages: [
       { role: 'system', content: 'Você é um desenvolvedor JavaScript sênior que corrige issues com mudanças mínimas.' },
       { role: 'user', content: prompt },
@@ -30,7 +31,8 @@ const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
 });
 if (!resp.ok) throw new Error(`Groq ${resp.status}: ${await resp.text()}`);
 
-const { resumo, arquivos } = JSON.parse((await resp.json()).choices[0].message.content);
+const texto = (await resp.json()).choices[0].message.content;
+const { resumo, arquivos } = JSON.parse(texto.slice(texto.indexOf('{'), texto.lastIndexOf('}') + 1));
 for (const [caminho, conteudo] of Object.entries(arquivos)) {
   if (!ARQUIVOS_PERMITIDOS.test(caminho)) throw new Error(`IA tentou alterar arquivo fora da lista: ${caminho}`);
   writeFileSync(caminho, conteudo);
