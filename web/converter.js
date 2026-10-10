@@ -36,3 +36,11 @@ export function kelvinParaCelsius(k) {
   validar(k, ZERO_ABSOLUTO_K);
   return resultado(k - 273.15);
 }
+
+export function classificarTemperatura(c) {
+  validar(c, ZERO_ABSOLUTO_C);
+  if (c < 0) return 'congelante';
+  if (c < 15) return 'frio';
+  if (c < 28) return 'agradavel';
+  return 'quente';
+}
