@@ -91,7 +91,7 @@ Workflows em `.github/workflows/` e scripts reutilizáveis em `scripts/` (`ia_de
 | 2 Canary | `canary.yml` | com_falha | rollback imediato com 10% do tráfego (regra fixa) | [38017474788](https://github.com/pschlbeatriz/conversor-temperatura/actions/runs/38017474788) |
 | 2 Canary | `canary.yml` | lentidao | a IA não viu a tendência; rollback imediato com 100% (p99 994 ms, regra fixa) | [38017479663](https://github.com/pschlbeatriz/conversor-temperatura/actions/runs/38017479663) |
 | 2 Canary | `canary.yml` | lentidao (modelo gpt-oss-120b) | mesmo resultado com um modelo maior | [38017720352](https://github.com/pschlbeatriz/conversor-temperatura/actions/runs/38017720352) |
-| 3 Pipeline completo | `pipeline-completo.yml` | normal | qualidade, segurança e **parou na aprovação humana** (environment `producao`) | [38017954302](https://github.com/pschlbeatriz/conversor-temperatura/actions/runs/38017954302) |
+| 3 Pipeline completo | `pipeline-completo.yml` | normal | qualidade, segurança, **aprovação humana** (environment `producao`, aprovado por mim) e deploy canary, tudo verde | [38020542769](https://github.com/pschlbeatriz/conversor-temperatura/actions/runs/38020542769) |
 
 Quem decidiu cada rollback: no `com_falha`, a regra fixa (limite de erro estourado com 10% do tráfego, nenhuma consulta à IA). No `lentidao`, também a regra fixa, com 100% do tráfego; a IA respondeu CONTINUAR nas etapas de 10% e 50% mesmo com a latência subindo de 101 ms para 398 ms, ou seja, todos os usuários já estavam expostos.
 
