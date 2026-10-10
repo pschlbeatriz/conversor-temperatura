@@ -10,6 +10,7 @@
   },
   "scripts": {
     "start": "npx --yes serve web",
+    "servidor": "node servidor.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "lint": "eslint .",
