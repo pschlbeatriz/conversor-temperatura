@@ -122,8 +122,7 @@ EXPLICACAO=$(grep -m1 -i '^EXPLICA' resposta.txt | cut -d: -f2- | sed 's/^ *//' 
 if [ ! -s novo.tmp ]; then
 MOTIVO="resposta vazia ou fora do formato${ERRO_API:+ (API: $ERRO_API)}"
 # ---- Trava 4: nenhum comando perigoso NOVO no código -------------------------
-elif [ "$(grep -cE "$PERIGOSOS" novo.tmp || true)" -gt "$(grep -cE "$PERIGOSOS" original.bak || true)"
-]; then
+elif [ "$(grep -cE "$PERIGOSOS" novo.tmp || true)" -gt "$(grep -cE "$PERIGOSOS" original.bak || true)" ]; then
 MOTIVO="rejeitada: a alteração introduz comando perigoso"
 # ---- Trava 5: não pode apagar metade do arquivo ------------------------------
 elif $EXISTIA && [ "$(wc -l < novo.tmp)" -lt $(( $(wc -l < original.bak) / 2 )) ]; then
