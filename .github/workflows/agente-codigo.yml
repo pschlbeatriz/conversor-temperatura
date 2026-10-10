@@ -55,6 +55,7 @@ jobs:
         id: agente
         env:
           GROQCLOUD_API_KEY: ${{ secrets.GROQCLOUD_API_KEY }}
+          MODELO: openai/gpt-oss-120b
           OBJETIVO: ${{ steps.missao.outputs.objetivo }}
           ARQUIVO_ALVO: ${{ steps.missao.outputs.alvo }}
           ARQUIVOS_CONTEXTO: ${{ steps.missao.outputs.contexto }}
