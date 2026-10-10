@@ -19,7 +19,7 @@ function resultado(valor) {
 
 export function celsiusParaFahrenheit(c) {
   validar(c, ZERO_ABSOLUTO_C);
-  return resultado((c * 9) / 5 + 32);
+  return resultado((c * 9) / 5 - 32);
 }
 
 export function fahrenheitParaCelsius(f) {
