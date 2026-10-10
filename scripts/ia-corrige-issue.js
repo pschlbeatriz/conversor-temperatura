@@ -39,6 +39,7 @@ if (!resp.ok) throw new Error(`Groq ${resp.status}: ${await resp.text()}`);
 const texto = (await resp.json()).choices[0].message.content;
 const [cabecalho, ...blocos] = texto.split(/^=== ARQUIVO: (.+) ===$/m);
 const resumo = cabecalho.replace('=== RESUMO ===', '').trim();
+if (blocos.length === 0) throw new Error(`Resposta da IA sem blocos de arquivo:\n${texto}`);
 for (let i = 0; i < blocos.length; i += 2) {
   const caminho = blocos[i].trim();
   const conteudo = `${blocos[i + 1].trim()}\n`;
