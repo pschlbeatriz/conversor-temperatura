@@ -11,6 +11,7 @@ function validar(valor, minimo) {
   }
 }
 
+// Entrada finita pode estourar para Infinity na multiplicação (ex.: Number.MAX_VALUE).
 function resultado(valor) {
   if (!Number.isFinite(valor)) throw new RangeError('Valor grande demais para converter.');
   return valor;
