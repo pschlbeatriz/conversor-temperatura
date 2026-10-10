@@ -8,6 +8,9 @@ on:
         type: choice
         options: [normal, com_falha, lentidao]
         default: normal
+      modelo:
+        description: "Modelo da IA (analise preditiva)"
+        default: openai/gpt-oss-20b
 
 permissions:
   contents: read
@@ -63,6 +66,7 @@ jobs:
         env:
           GROQCLOUD_API_KEY: ${{ secrets.GROQCLOUD_API_KEY }}
           IA_RESUMO: "0"
+          MODELO: ${{ inputs.modelo }}
           URL_ESTAVEL: http://127.0.0.1:8001/
           URL_NOVA: http://127.0.0.1:8002/
         run: |
