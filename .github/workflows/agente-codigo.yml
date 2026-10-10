@@ -38,7 +38,7 @@ jobs:
           if [ "$MISSAO" = "corrigir_bug" ]; then
             {
               echo "objetivo=Corrigir o código para que os testes passem, sem mudar o que os testes esperam."
-              echo "alvo=web/converter.js"
+              echo "alvo=.github/workflows/ci.yml"
               echo "contexto=test/converter.test.js test/converter.sugeridos.test.js test/converter_kelvin.test.js"
               echo "verificacao=npm test"
             } >> "$GITHUB_OUTPUT"
